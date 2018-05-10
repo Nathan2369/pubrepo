@@ -61,7 +61,9 @@ public class ExampleBot extends TeamClient {
 			Set<AbstractActionableObject> actionableObjects) {
 		HashMap<UUID, AbstractAction> actions = new HashMap<UUID, AbstractAction>();
 		Ship flagShip;
-
+		
+		if(timeSteps == 0)
+			initialize(space);
 		// get the flag carrier, if we have one
 		flagShip = getFlagCarrier(space, actionableObjects);
 
@@ -110,6 +112,7 @@ public class ExampleBot extends TeamClient {
 				actions.put(actionable.getId(), new DoNothingAction());
 			}
 		} 
+		timeSteps++;
 		return actions;
 	}
 
@@ -221,18 +224,17 @@ public class ExampleBot extends TeamClient {
 		}
 
 		// if there is a nearby core, go get it
-		AiCore nearbyCore = pickNearestCore(space, ship, 200);
+		/*AiCore nearbyCore = pickNearestCore(space, ship, 200);
 		if (nearbyCore != null) {
 			AbstractAction newAction = getAStarPathToGoal(space, (Ship) ship, nearbyCore.getPosition());
 			goingForCore.put(ship.getId(), true);
 			aimingForBase.put(ship.getId(), false);
 			return newAction;
-		}
+		} */
 
 
 		// did we bounce off the base?
-		if (current == null || current.isMovementFinished(space) ||
-				(justHitBase.containsKey(ship.getId()) && justHitBase.get(ship.getId()))) {
+		if (ship.getResources().getTotal() == 0) {
 			aimingForBase.put(ship.getId(), false);
 			justHitBase.put(ship.getId(), false);			
 			goingForCore.put(ship.getId(), false);
@@ -240,7 +242,7 @@ public class ExampleBot extends TeamClient {
 		}
 
 		// otherwise aim for the asteroid
-		if (current == null || current.isMovementFinished(space)) {
+
 			aimingForBase.put(ship.getId(), false);
 			goingForCore.put(ship.getId(), false);
 			Asteroid asteroid = pickHighestValueNearestFreeAsteroid(space, ship);
@@ -253,9 +255,6 @@ public class ExampleBot extends TeamClient {
 			}
 
 			return newAction;
-		} 
-
-		return ship.getCurrentAction();
 	}
 
 

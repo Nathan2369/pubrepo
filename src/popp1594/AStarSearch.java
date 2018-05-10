@@ -27,7 +27,7 @@ public class AStarSearch  {
 	/**
 	 * Fudge factor keeps you from going too close to obstacles
 	 */
-	private static final int fudge_factor = 20;
+	private static final int fudge_factor = 15;
 	private static final int numGraphNodes = 200;
 	private static final double maxNodeDistance = 200;
 	
